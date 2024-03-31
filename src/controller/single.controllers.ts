@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
 import { lkList } from "../../linkedList/single/lkList";
+import { MENU } from "../enum/MENU";
+import { RESPONSE_MESSAGES } from "../enum/response.messages";
 class SingleController {
     async singleHandler(req:Request,res:Response) {
         const payload = {
@@ -7,17 +9,20 @@ class SingleController {
             value: req.query.value as string,
         };
         const menu = {
-            1: "Insert element at beginning",
-            2: "Traverse All the element",
+            1: MENU.INSERT_ELEMENT_BEGINNING,
+            2: MENU.TRAVERSE_ALL_ELEMENT,
+            3: MENU.INSERT_ELEMENT_END,
+            4: MENU.DELETE_ELEMENT_BEGINNING,
         };
         let response;
+        let val: number = 0;
         console.log("------------", payload);
         switch(payload.choice) {
             case 1:
-                const val: number = parseInt(payload.value);
+                val = parseInt(payload.value);
                 if(!val) {
                     return res.send({
-                        result:{prompt:"Enter the valid value"},
+                        result:{prompt: RESPONSE_MESSAGES.ENTER_VALID_VALUE},
                         menu:{...menu}
                     })
                 }
@@ -34,6 +39,26 @@ class SingleController {
                     menu:{...menu}
                 })
             break;
+            case 3:
+                val = parseInt(payload.value);
+                if(!val) {
+                    return res.send({
+                        result:{prompt: RESPONSE_MESSAGES.ENTER_VALID_VALUE},
+                        menu:{...menu}
+                    })
+                }
+                response = lkList.insertAtEnd(val);
+                return res.send({
+                    result:{...response},
+                    menu:{...menu}
+                })
+            case 4:
+                    response = lkList.deleteElementFromStart();
+                    return res.send({
+                        result:{...response},
+                        menu:{...menu}
+                    })
+                
         }
         return res.send(menu);
     }
