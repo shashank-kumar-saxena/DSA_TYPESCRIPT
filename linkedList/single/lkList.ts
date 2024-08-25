@@ -50,10 +50,45 @@ class LkList<T> {
 
     public deleteElementFromStart() {
         if(!this.head) {
-            return {success: RESPONSE_MESSAGES.NO_ELEMENT_AVAILABLE};
+            return {success: RESPONSE_MESSAGES.NO_ELEMENT_AVAILABLE_TO_DELETE};
         }
         this.head = this.head.next;
         return {success: RESPONSE_MESSAGES.ELEMENT_DELETE};
+    }
+
+    public insertElementAfterSpecificElement(value: T,searchElement: T) {
+        if(!this.head) {
+            return { success: RESPONSE_MESSAGES.SEARCHABLE_ELEMENT_NOT_FOUND}
+        }
+        let temp: Block<T> | null = this.head;
+        while(temp) {
+            if(temp.val== searchElement)
+                {
+                    const node = new Block(value);
+                    node.next= temp.next;
+                    temp.next = node;
+                    return {success: RESPONSE_MESSAGES.ELEMENT_INSERT_SUCCESS};
+                }
+                temp = temp.next;
+        }
+        return { success: RESPONSE_MESSAGES.SEARCHABLE_ELEMENT_NOT_FOUND};
+    }
+
+    public reverseTraverse() {
+        if(!this.head) {
+            return {
+                success: '[]'
+            }
+        }
+        let temp: null | Block<T> = this.head;
+        const arr: T[] = [];
+        while(temp!=null) {
+            arr.unshift(temp.val);
+            temp = temp.next;
+        }
+        return {
+            success: `${arr.join('->')}`
+        }
     }
 }
 export const lkList= new LkList<number>();
